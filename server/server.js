@@ -20,6 +20,17 @@ app.get('/users', (req, res) => {
   res.send({ users });
 });
 
+app.post('/users', (req, res) => {
+  const newUser = req.body.name && { id: uuid.v4(), name: req.body.name };
+  if (newUser) {
+    users.push(newUser);
+    res.send({ users });
+  }
+  else {
+    res.send({ 'error': 'please provide a name.' });
+  }
+});
+
 app.get('/users/:id', (req, res) => {
   for (let i = 0, len = users.length; i < len; i++) {
     if (users[i].id === req.params.id) return res.send(users[i]);
@@ -37,17 +48,6 @@ app.get('/search', (req, res) => {
     });
   }
   res.send(results.length > 0 ? { users: results } : { error: 'No users found!' });
-});
-
-app.post('/new-user', (req, res) => {
-  const newUser = req.body.name && { id: uuid.v4(), name: req.body.name };
-  if (newUser) {
-    users.push(newUser);
-    res.send({ users });
-  }
-  else {
-    res.send({ 'error': 'please provide a name.' });
-  }
 });
 
 app.delete('/users/:id', (req, res) => {
